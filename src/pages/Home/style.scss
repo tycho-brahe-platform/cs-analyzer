@@ -1,0 +1,41 @@
+.home-container {
+  flex: 1;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: var(--spacing-medium);
+}
+
+.home-content {
+  text-align: center;
+  max-width: 1200px;
+  width: 100%;
+}
+
+.home-out-layout {
+  text-align: left;
+  align-items: stretch;
+}
+
+.home-out-files {
+  min-width: 0;
+}
+
+.home-out-details {
+  min-width: 0;
+  text-align: left;
+}
+
+.home-out-item {
+  text-align: left;
+  padding: var(--spacing-medium);
+}
+
+.home-out-summary {
+  margin: 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+}
