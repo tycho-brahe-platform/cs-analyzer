@@ -8,7 +8,7 @@ import {
   type OutFileSentenceRow,
 } from '../../utils/parseOutFileSentences';
 
-export type OutFileDetailsProps = {
+export type Props = {
   /** Raw .out file text */
   content: string;
   /** Optional heading (e.g. file name) */
@@ -16,17 +16,10 @@ export type OutFileDetailsProps = {
   className?: string;
 };
 
-export default function OutFileDetails({
-  content,
-  title,
-  className,
-}: OutFileDetailsProps) {
+export default function OutFileDetails({ content, title, className }: Props) {
   const { t } = useTranslation('home');
 
-  const rows = useMemo(
-    () => parseOutFileSentences(content),
-    [content],
-  );
+  const rows = useMemo(() => parseOutFileSentences(content), [content]);
 
   const columns = useMemo<ColumnDef<OutFileSentenceRow>[]>(
     () => [
@@ -39,7 +32,7 @@ export default function OutFileDetails({
         header: t('home.out.columnSentence'),
       },
     ],
-    [t],
+    [t]
   );
 
   if (rows.length === 0) {
