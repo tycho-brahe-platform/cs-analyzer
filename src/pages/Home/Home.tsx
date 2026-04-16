@@ -12,10 +12,14 @@ import {
   Typography,
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
+import { AppModal } from 'tycho-components';
 import AppDropzone from '../../components/AppDropzone/AppDropzone';
 import type { UploadedFile } from '../../components/AppDropzone/UploadedFile';
 import OutFileDetails from '../../components/OutFileDetails';
-import { extractOutFileSummary } from '../../utils/extractOutFileSummary';
+import {
+  parseOutFileSummaryStats,
+  type Summary as OutFileSummaryStats,
+} from '../../utils/Summary';
 import { parseOutFileSentences } from '../../utils/parseOutFileSentences';
 import {
   compareGroup1IdsMissingFromGroup2,
@@ -29,7 +33,7 @@ import './style.scss';
 
 type OutEntry = {
   name: string;
-  summary: string;
+  summaryStats: OutFileSummaryStats | null;
   content: string;
 };
 
@@ -41,16 +45,16 @@ export default function Home() {
   const [dropzoneOpen, setDropzoneOpen] = useState(false);
   const [outEntries, setOutEntries] = useState<OutEntry[]>([]);
   const [fileGroups, setFileGroups] = useState<FileGroup[]>([]);
-  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+  const [detailModalIndex, setDetailModalIndex] = useState<number | null>(null);
   /** Set when the user runs a comparison; null means not run yet this session. */
-  const [comparisonRows, setComparisonRows] = useState<GroupCompareRow[] | null>(
-    null,
-  );
+  const [comparisonRows, setComparisonRows] = useState<
+    GroupCompareRow[] | null
+  >(null);
 
   const handleSuccess = (files: UploadedFile[]) => {
     const next = files.map((f) => ({
       name: f.name,
-      summary: extractOutFileSummary(f.content),
+      summaryStats: parseOutFileSummaryStats(f.content),
       content: f.content,
     }));
     setOutEntries((prev) => [...prev, ...next]);
@@ -65,7 +69,7 @@ export default function Home() {
   const handleClearResults = () => {
     setOutEntries([]);
     setFileGroups([]);
-    setSelectedIndex(null);
+    setDetailModalIndex(null);
     setComparisonRows(null);
   };
 
@@ -84,7 +88,7 @@ export default function Home() {
 
   const handleCompareGroups = () => {
     setComparisonRows(
-      compareGroup1IdsMissingFromGroup2(outEntries, fileGroups),
+      compareGroup1IdsMissingFromGroup2(outEntries, fileGroups)
     );
   };
 
@@ -103,19 +107,31 @@ export default function Home() {
       }
     }
     const differenceCount = comparisonRows.length;
-    const headerComment = `/*\n${t('home.out.exportHeaderTitle')}\n${t('home.out.exportHeaderG1', { count: group1SentenceCount })}\n${t('home.out.exportHeaderG2', { count: group2SentenceCount })}\n${t('home.out.exportHeaderDiff', { count: differenceCount })}\n*/`;
+    const headerComment = `/*\n${t('home.out.exportHeaderTitle')}\n${t(
+      'home.out.exportHeaderG1',
+      { count: group1SentenceCount }
+    )}\n${t('home.out.exportHeaderG2', { count: group2SentenceCount })}\n${t(
+      'home.out.exportHeaderDiff',
+      { count: differenceCount }
+    )}\n*/`;
     const txt = buildComparisonOutTxt(
       comparisonRows,
       (idx) => outEntries[idx]?.content,
-      headerComment,
+      headerComment
     );
     const d = new Date();
-    const stamp = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}-${String(d.getHours()).padStart(2, '0')}${String(d.getMinutes()).padStart(2, '0')}`;
+    const stamp = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(
+      2,
+      '0'
+    )}-${String(d.getDate()).padStart(2, '0')}-${String(d.getHours()).padStart(
+      2,
+      '0'
+    )}${String(d.getMinutes()).padStart(2, '0')}`;
     downloadTxtFile(txt, `comparison-${stamp}.txt`);
   };
 
-  const selectedEntry =
-    selectedIndex !== null ? outEntries[selectedIndex] : undefined;
+  const detailModalEntry =
+    detailModalIndex !== null ? outEntries[detailModalIndex] : undefined;
 
   return (
     <div className="home-container">
@@ -131,18 +147,6 @@ export default function Home() {
           {t('home.out.selectFiles')}
         </Button>
 
-        {dropzoneOpen && (
-          <AppDropzone
-            onClose={() => setDropzoneOpen(false)}
-            onSuccess={handleSuccess}
-            accept={{
-              'text/plain': ['.out'],
-              'application/octet-stream': ['.out'],
-            }}
-            title={t('home.out.modalTitle')}
-          />
-        )}
-
         {outEntries.length > 0 && (
           <Stack spacing={2} sx={{ mt: 3, width: '100%' }} alignItems="stretch">
             <Typography variant="body2" color="text.secondary" sx={{ px: 0.5 }}>
@@ -154,7 +158,11 @@ export default function Home() {
               alignItems="center"
               justifyContent="center"
             >
-              <Button variant="contained" onClick={handleCompareGroups} disabled={!canCompare}>
+              <Button
+                variant="contained"
+                onClick={handleCompareGroups}
+                disabled={!canCompare}
+              >
                 {t('home.out.compareButton')}
               </Button>
               <Button variant="outlined" onClick={handleClearResults}>
@@ -162,7 +170,11 @@ export default function Home() {
               </Button>
             </Stack>
             {!canCompare ? (
-              <Typography variant="caption" color="text.secondary" sx={{ textAlign: 'center' }}>
+              <Typography
+                variant="caption"
+                color="text.secondary"
+                sx={{ textAlign: 'center' }}
+              >
                 {t('home.out.compareNeedBothGroups')}
               </Typography>
             ) : null}
@@ -191,12 +203,20 @@ export default function Home() {
                       className="home-out-item"
                       sx={{
                         borderColor:
-                          selectedIndex === i ? 'primary.main' : undefined,
-                        borderWidth: selectedIndex === i ? 2 : 1,
+                          detailModalIndex === i ? 'primary.main' : undefined,
+                        borderWidth: detailModalIndex === i ? 2 : 1,
+                        p: 1,
                       }}
                     >
-                      <FormControl component="fieldset" variant="standard" sx={{ mb: 1, width: '100%' }}>
-                        <FormLabel component="legend" sx={{ typography: 'caption', mb: 0.5 }}>
+                      <FormControl
+                        component="fieldset"
+                        variant="standard"
+                        sx={{ mb: 1, width: '100%' }}
+                      >
+                        <FormLabel
+                          component="legend"
+                          sx={{ typography: 'caption', mb: 0.5 }}
+                        >
                           {t('home.out.groupAssignment')}
                         </FormLabel>
                         <RadioGroup
@@ -224,23 +244,37 @@ export default function Home() {
                           />
                         </RadioGroup>
                       </FormControl>
-                      <Typography variant="subtitle1" fontWeight={600} gutterBottom>
+                      <Typography
+                        variant="subtitle1"
+                        fontWeight={600}
+                        gutterBottom
+                      >
                         {entry.name}
                       </Typography>
-                      {entry.summary ? (
-                        <Box component="pre" className="home-out-summary">
-                          {entry.summary}
-                        </Box>
+                      {entry.summaryStats ? (
+                        <Typography variant="body2" sx={{ mb: 1 }}>
+                          {t('home.out.summaryStats', {
+                            hits: entry.summaryStats.hits.toLocaleString(),
+                            tokens: entry.summaryStats.tokens.toLocaleString(),
+                            total: entry.summaryStats.total.toLocaleString(),
+                          })}
+                        </Typography>
                       ) : (
                         <Typography color="text.secondary" variant="body2">
                           {t('home.out.noSummary')}
                         </Typography>
                       )}
-                      <Box sx={{ mt: 1.5, display: 'flex', justifyContent: 'flex-start' }}>
+                      <Box
+                        sx={{
+                          mt: 1.5,
+                          display: 'flex',
+                          justifyContent: 'flex-start',
+                        }}
+                      >
                         <Button
                           variant="contained"
                           size="small"
-                          onClick={() => setSelectedIndex(i)}
+                          onClick={() => setDetailModalIndex(i)}
                         >
                           {t('home.out.viewDetails')}
                         </Button>
@@ -260,7 +294,7 @@ export default function Home() {
                 }}
               >
                 {comparisonRows !== null ? (
-                  <Box sx={{ mb: selectedEntry ? 3 : 0 }}>
+                  <Box sx={{ mb: 2 }}>
                     <Box
                       sx={{
                         display: 'flex',
@@ -324,21 +358,39 @@ export default function Home() {
                   </Box>
                 ) : null}
 
-                {selectedEntry ? (
-                  <OutFileDetails
-                    content={selectedEntry.content}
-                    title={selectedEntry.name}
-                  />
-                ) : (
-                  <Typography color="text.secondary" variant="body2">
-                    {t('home.out.detailsPlaceholder')}
-                  </Typography>
-                )}
+                <Typography color="text.secondary" variant="body2">
+                  {t('home.out.detailsPlaceholder')}
+                </Typography>
               </Paper>
             </Box>
           </Stack>
         )}
       </Box>
+
+      {dropzoneOpen && (
+        <AppDropzone
+          onClose={() => setDropzoneOpen(false)}
+          onSuccess={handleSuccess}
+          accept={{
+            'text/plain': ['.out'],
+            'application/octet-stream': ['.out'],
+          }}
+          title={t('home.out.modalTitle')}
+        />
+      )}
+
+      {detailModalEntry ? (
+        <AppModal
+          title={detailModalEntry.name}
+          close={() => setDetailModalIndex(null)}
+          hideFooter
+          className="modal-out-details"
+        >
+          <Box sx={{ maxHeight: '70vh', overflow: 'auto' }}>
+            <OutFileDetails content={detailModalEntry.content} />
+          </Box>
+        </AppModal>
+      ) : null}
     </div>
   );
 }

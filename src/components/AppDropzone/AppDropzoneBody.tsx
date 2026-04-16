@@ -73,14 +73,16 @@ function AppDropzoneBodyInner(
 
   return (
     <div className="dropzone-container">
-      <Dropzone onDrop={handleDrop} accept={accept} multiple>
-        {({ getRootProps, getInputProps }) => (
-          <div {...getRootProps()} className="dropzone">
-            <input {...getInputProps()} />
-            <span>{t('label.dropzone')}</span>
-          </div>
-        )}
-      </Dropzone>
+      {files.length === 0 && (
+        <Dropzone onDrop={handleDrop} accept={accept} multiple>
+          {({ getRootProps, getInputProps }) => (
+            <div {...getRootProps()} className="dropzone">
+              <input {...getInputProps()} />
+              <span>{t('label.dropzone')}</span>
+            </div>
+          )}
+        </Dropzone>
+      )}
 
       {files.length > 0 && (
         <div className="uploaded-message">

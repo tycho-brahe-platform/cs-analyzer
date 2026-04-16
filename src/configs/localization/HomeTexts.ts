@@ -5,7 +5,9 @@ export const HomeTexts = {
     'home.out.selectFiles': 'Select .out files',
     'home.out.modalTitle': 'Corpus Search output (.out)',
     'home.out.noSummary':
-      'No SUMMARY or FOOTER block found at the end of this file.',
+      'No summary statistics (could not find a “whole search” line with hits, tokens, and total in the SUMMARY/FOOTER block).',
+    'home.out.summaryStats':
+      '{{hits}} hits · {{tokens}} tokens · {{total}} total',
     'home.out.clearResults': 'Clear list',
     'home.out.columnId': 'ID',
     'home.out.columnSentence': 'Sentence',
@@ -44,7 +46,9 @@ export const HomeTexts = {
     'home.out.selectFiles': 'Selecionar arquivos .out',
     'home.out.modalTitle': 'Saída do Corpus Search (.out)',
     'home.out.noSummary':
-      'Nenhum bloco SUMMARY ou FOOTER encontrado no final deste arquivo.',
+      'Sem estatísticas de resumo (não foi possível encontrar uma linha “whole search” com ocorrências, tokens e total no bloco SUMMARY/FOOTER).',
+    'home.out.summaryStats':
+      '{{hits}} ocorrências · {{tokens}} tokens · {{total}} total',
     'home.out.clearResults': 'Limpar lista',
     'home.out.columnId': 'ID',
     'home.out.columnSentence': 'Frase',
@@ -83,7 +87,9 @@ export const HomeTexts = {
     'home.out.selectFiles': 'Seleziona file .out',
     'home.out.modalTitle': 'Output Corpus Search (.out)',
     'home.out.noSummary':
-      'Nessun blocco SUMMARY o FOOTER trovato in fondo al file.',
+      'Nessuna statistica di riepilogo (nessuna riga “whole search” con occorrenze, token e totale nel blocco SUMMARY/FOOTER).',
+    'home.out.summaryStats':
+      '{{hits}} occorrenze · {{tokens}} token · {{total}} totale',
     'home.out.clearResults': 'Svuota elenco',
     'home.out.columnId': 'ID',
     'home.out.columnSentence': 'Frase',
