@@ -5,11 +5,11 @@ import {
   createBrowserRouter,
   createRoutesFromElements,
 } from 'react-router-dom';
-import ErrorPage from './session/ErrorPage';
+import WrapperOutlet from './WrapperOutlet';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
-    <Route errorElement={<ErrorPage />}>
+    <Route path="/" element={<WrapperOutlet />}>
       <Route path="/" element={<Home />} />
     </Route>
   )

@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import {
   Box,
   Button,
@@ -11,16 +10,18 @@ import {
   Stack,
   Typography,
 } from '@mui/material';
+import {
+  AppDropzone,
+  AppModal,
+  UploadedFile,
+} from '@tycho-platform/components';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { AppModal } from 'tycho-components';
-import AppDropzone from '../../components/AppDropzone/AppDropzone';
-import type { UploadedFile } from '../../components/AppDropzone/UploadedFile';
 import OutFileDetails from '../../components/OutFileDetails';
 import {
   parseOutFileSummaryStats,
   type Summary as OutFileSummaryStats,
 } from '../../utils/Summary';
-import { parseOutFileSentences } from '../../utils/parseOutFileSentences';
 import {
   compareGroup1IdsMissingFromGroup2,
   type GroupCompareRow,
@@ -29,6 +30,7 @@ import {
   buildComparisonOutTxt,
   downloadTxtFile,
 } from '../../utils/comparisonResultTxt';
+import { parseOutFileSentences } from '../../utils/parseOutFileSentences';
 import './style.scss';
 
 type OutEntry = {
