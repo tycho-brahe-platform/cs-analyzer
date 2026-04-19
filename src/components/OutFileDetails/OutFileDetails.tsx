@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { Typography } from '@mui/material';
 import type { ColumnDef } from '@tanstack/react-table';
 import { useTranslation } from 'react-i18next';
-import { AppTableList } from 'tycho-components';
+import { AppTableList } from '@tycho-platform/components';
 import {
   parseOutFileSentences,
   type OutFileSentenceRow,

@@ -1,7 +1,8 @@
 export const HomeTexts = {
   en: {
+    'label.tool': 'CS Analyzer',
     'home.title': 'CS Analyzer',
-    'home.subtitle': 'Tycho Brahe Platform',
+    'home.subtitle': 'Tycho Platform',
     'home.out.selectFiles': 'Select .out files',
     'home.out.modalTitle': 'Corpus Search output (.out)',
     'home.out.noSummary':
@@ -41,8 +42,9 @@ export const HomeTexts = {
     'error.label.details': 'Click here to see the error details',
   },
   'pt-BR': {
+    'label.tool': 'CS Analyzer',
     'home.title': 'CS Analyzer',
-    'home.subtitle': 'Plataforma Tycho Brahe',
+    'home.subtitle': 'Plataforma Tycho',
     'home.out.selectFiles': 'Selecionar arquivos .out',
     'home.out.modalTitle': 'Saída do Corpus Search (.out)',
     'home.out.noSummary':
@@ -82,8 +84,9 @@ export const HomeTexts = {
     'error.label.details': 'Clique aqui para ver os detalhes do erro',
   },
   it: {
+    'label.tool': 'CS Analyzer',
     'home.title': 'CS Analyzer',
-    'home.subtitle': 'Piattaforma Tycho Brahe',
+    'home.subtitle': 'Piattaforma Tycho',
     'home.out.selectFiles': 'Seleziona file .out',
     'home.out.modalTitle': 'Output Corpus Search (.out)',
     'home.out.noSummary':
